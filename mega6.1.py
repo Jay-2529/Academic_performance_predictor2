@@ -8,6 +8,62 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
+# ---- SAMPLE DATASET GENERATOR ----
+import pandas as pd
+import numpy as np
+
+class SampleDatasetGenerator:
+    def __init__(self, n_samples=500, random_state=42):
+        self.n_samples = n_samples
+        np.random.seed(random_state)
+
+    def generate_sample_dataset(self):
+        df = pd.DataFrame({
+            'student_id': range(1, self.n_samples + 1),
+            'age': np.random.randint(13, 22, size=self.n_samples),
+            'gender': np.random.choice(['Male', 'Female'], size=self.n_samples),
+            'attendance_rate': np.random.uniform(0.5, 1.0, size=self.n_samples),
+            'study_hours': np.random.uniform(0, 10, size=self.n_samples),
+            'assignment_score': np.random.uniform(40, 100, size=self.n_samples),
+            'exam_score': np.random.uniform(30, 100, size=self.n_samples),
+            'parental_education': np.random.choice(
+                ['None', 'Primary', 'Secondary', 'Tertiary'], 
+                size=self.n_samples
+            ),
+            'family_size': np.random.randint(1, 10, size=self.n_samples),
+            'location': np.random.choice(['Urban', 'Rural'], size=self.n_samples)
+        })
+
+        df['final_grade'] = (
+            0.4 * df['assignment_score'] +
+            0.5 * df['exam_score'] +
+            0.1 * (df['study_hours'] * 10)
+        ) / 10
+
+        df['performance_category'] = pd.cut(
+            df['final_grade'],
+            bins=[0, 5, 7, 10],
+            labels=['Low', 'Average', 'High']
+        )
+
+        return df
+
+    def add_missing_values(self, df, missing_rate=0.05):
+        """
+        Randomly introduce missing values into the dataset to simulate real-world data issues.
+        missing_rate: fraction of total cells to make NaN (default 5%)
+        """
+        df_copy = df.copy()
+        n_missing = int(missing_rate * df_copy.size)
+
+        # Randomly choose which cells to set as missing
+        missing_rows = np.random.randint(0, df_copy.shape[0], n_missing)
+        missing_cols = np.random.randint(0, df_copy.shape[1], n_missing)
+        df_copy.values[missing_rows, missing_cols] = np.nan
+
+        return df_copy
+
+
 
 # Page configuration
 st.set_page_config(
@@ -232,7 +288,7 @@ def data_upload_page():
         if st.button("Generate Sample Dataset", type="secondary"):
             with st.spinner("Generating sample educational dataset..."):
                 try:
-                    from data.sample_dataset import SampleDatasetGenerator
+            
                     
                     generator = SampleDatasetGenerator(n_samples=sample_size, random_state=42)
                     sample_df = generator.generate_sample_dataset()
