@@ -35,9 +35,9 @@ import webbrowser
 # PAGE CONFIG - MUST BE FIRST STREAMLIT COMMAND
 # ==============================
 st.set_page_config(
-    page_title=" Predicting Students' Academic Performance Using Machine Learning
-A Case Study of Sakyi Agyakwa/Osaebo Cluster of Schools
-( Smart Academic Analytics Sytem)",
+    page_title= " Predicting Students' Academic Performance Using Machine Learning
+      A Case Study of Sakyi Agyakwa/Osaebo Cluster of Schools"
+ " (Smart Academic Analytics Sytem)",
     page_icon="🎓",
     layout="wide",
     initial_sidebar_state="expanded"
